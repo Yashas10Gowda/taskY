@@ -1,3 +1,5 @@
+import { Task } from "./interfaces";
+
 export const panelTemplate = `
 <div class="panel">
 <div class="panel-header text-center">
@@ -7,39 +9,11 @@ export const panelTemplate = `
 </div>
 <nav class="panel-nav">
   <ul class="tab tab-block">
-    <li class="tab-item active"><a href="#panels">Pending</a></li>
-    <li class="tab-item"><a href="#panels">Completed</a></li>
+    <li class="tab-item text-gray active"><a href="#panels">Pending</a></li>
+    <li class="tab-item text-gray"><a href="#panels">Completed</a></li>
   </ul>
 </nav>
-<div class="panel-body">
-  <div class="tile tile-centered">
-    <div class="tile-content">
-      <div class="tile-title text-bold">E-mail</div>
-      <div class="tile-subtitle">bruce.banner@hulk.com</div>
-    </div>
-    <div class="tile-action">
-      <button class="btn btn-link btn-action btn-lg tooltip tooltip-left" data-tooltip="Edit E-mail"><i
-          class="icon icon-edit"></i></button>
-    </div>
-  </div>
-  <div class="tile tile-centered">
-    <div class="tile-content">
-      <div class="tile-title text-bold">Skype</div>
-      <div class="tile-subtitle">bruce.banner</div>
-    </div>
-    <div class="tile-action">
-      <button class="btn btn-link btn-action btn-lg"><i class="icon icon-edit"></i></button>
-    </div>
-  </div>
-  <div class="tile tile-centered">
-    <div class="tile-content">
-      <div class="tile-title text-bold">Location</div>
-      <div class="tile-subtitle">Dayton, Ohio</div>
-    </div>
-    <div class="tile-action">
-      <button class="btn btn-link btn-action btn-lg"><i class="icon icon-edit"></i></button>
-    </div>
-  </div>
+<div id="tasks" class="panel-body"><br> 
 </div>
 <div class="panel-footer">
   <button class="btn btn-primary btn-block" id="modal-trigger">Add Task</button>
@@ -76,3 +50,23 @@ export const modalTemplate =  `
   </div>
 </div>
 `;
+
+export const getLiTaskTemplate = (taskObject: Task ) : string => {
+  return `
+<div class="tile tile-centered">
+  <div class="tile-content">
+    <div class="tile-title text-large text-primary">${taskObject.title}
+    <span class="text-tiny text-normal float-right text-primary bg-secondary mx-2">${taskObject.datetime.toLocaleString()}</span>
+    </div>
+    <div class="tile-subtitle text-gray">
+      <span class="text-ellipsis text-small float-left text-gray">${taskObject.description}</span>
+    </div>
+  </div>
+  <div class="tile-action">
+    <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-delete"></i></button>
+    <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-check"></i></button>
+  </div>
+</div>
+<div class="divider"></div>
+  `;
+};

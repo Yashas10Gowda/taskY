@@ -13,7 +13,7 @@ export const panelTemplate = `
     <li class="tab-item text-gray"><a href="#panels">Completed</a></li>
   </ul>
 </nav>
-<div id="tasks" class="panel-body"><br> 
+<div style="height: 50vh;overflow-y: auto;overflow-x: hidden;" id="tasks" class="panel-body">
 </div>
 <div class="panel-footer">
   <button class="btn btn-primary btn-block" id="modal-trigger">Add Task</button>
@@ -22,10 +22,10 @@ export const panelTemplate = `
 `;
 
 export const modalTemplate =  `
-<div class="modal" id="example-modal-2"><a class="modal-overlay" href="#modals-sizes"
+<div class="modal" id="modal"><a class="modal-overlay" href="#modals-sizes"
     aria-label="Close"></a>
   <div class="modal-container" role="document">
-    <div class="modal-header"><a class="btn btn-clear float-right" href="#modals-sizes" aria-label="Close"></a>
+    <div class="modal-header"><a class="btn btn-clear float-right" id="modal-close" href="#modals-sizes" aria-label="Close"></a>
       <div class="modal-title h5 text-primary">Add Task</div>
     </div>
     <div class="modal-body">
@@ -52,16 +52,15 @@ export const modalTemplate =  `
 `;
 
 export const getLiTaskTemplate = (taskObject: Task ) : string => {
-  return `
+  return `<br>
 <div class="tile tile-centered">
-  <div class="tile-content">
-    <div class="tile-title text-large text-primary">${taskObject.title}
-    <span class="text-tiny text-normal float-right text-primary bg-secondary mx-2">${taskObject.datetime.toLocaleString()}</span>
+  <div class="tile-content">  
+    <div class="tile-title text-large text-primary bg-secondary d-inline-block">${taskObject.title}</div>
+    <div class="tile-subtitle text-small text-gray">${taskObject.description}</div>
+    <div class="tile-subtitle text-tiny text-primary d-inline-block">
+      ${taskObject.datetime.toLocaleDateString() + ' ' + taskObject.datetime.toLocaleTimeString()}
     </div>
-    <div class="tile-subtitle text-gray">
-      <span class="text-ellipsis text-small float-left text-gray">${taskObject.description}</span>
     </div>
-  </div>
   <div class="tile-action">
     <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-delete"></i></button>
     <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-check"></i></button>

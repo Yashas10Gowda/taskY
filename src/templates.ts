@@ -30,22 +30,22 @@ export const modalTemplate =  `
     </div>
     <div class="modal-body">
       <div class="content">
-        <form>
+        <form id="form">
           <div class="form-group">
-            <input class="form-input text-primary" id="title" name="title" type="text" placeholder="New Task">
+            <input required class="form-input text-primary" id="title" name="title" type="text" placeholder="New Task">
           </div>
           <div class="form-group">
-            <textarea class="form-input text-primary" id="input-example-3" placeholder="Description" rows="3"></textarea>
+            <textarea class="form-input text-primary" id="description" placeholder="Description" rows="3"></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label text-gray" for="time">Set date and time:</label>
-            <input type="datetime-local" class="form-input text-primary" id="time" name="time">
+            <label class="form-label text-gray" for="datetime">Set date and time:</label>
+            <input required type="datetime-local" class="form-input text-primary" id="datetime" name="datetime">
           </div>
         </form>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary btn-block">Add</button>
+      <button type="submit" form="form" class="btn btn-primary btn-block">Add</button>
     </div>
   </div>
 </div>

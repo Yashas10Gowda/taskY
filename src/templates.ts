@@ -8,9 +8,9 @@ export const panelTemplate = `
   <div class="panel-subtitle text-gray">Your todo list made simple.</div>
 </div>
 <nav class="panel-nav">
-  <ul class="tab tab-block">
-    <li class="tab-item text-gray active"><a href="#panels">Pending</a></li>
-    <li class="tab-item text-gray"><a href="#panels">Completed</a></li>
+  <ul id="tab" class="tab tab-block">
+    <li id="ptabitem" class="tab-item text-gray active"><a id="pending" class="liChild" href="#">Pending</a></li>
+    <li id="ctabitem" class="tab-item text-gray"><a id="completed" class="liChild" href="#">Completed</a></li>
   </ul>
 </nav>
 <div style="height: 50vh;overflow-y: auto;overflow-x: hidden;" id="tasks" class="panel-body">
@@ -51,21 +51,22 @@ export const modalTemplate =  `
 </div>
 `;
 
-export const getLiTaskTemplate = (taskObject: Task ) : string => {
-  return `<br>
-<div class="tile tile-centered">
-  <div class="tile-content">  
-    <div class="tile-title text-large text-primary bg-secondary d-inline-block">${taskObject.title}</div>
-    <div class="tile-subtitle text-small text-gray">${taskObject.description}</div>
-    <div class="tile-subtitle text-tiny text-primary d-inline-block">
-      ${taskObject.datetime.toLocaleDateString() + ' ' + taskObject.datetime.toLocaleTimeString()}
-    </div>
-    </div>
-  <div class="tile-action">
-    <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-delete"></i></button>
-    <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-check"></i></button>
-  </div>
-</div>
-<div class="divider"></div>
-  `;
+export const getLiTaskTemplate = (taskObject: Task, completed:boolean ) : string => {
+  return `
+      <br>
+      <div class="tile tile-centered">
+        <div class="tile-content">  
+          <div ${ completed ? 'style="text-decoration: line-through;"' : '' } class="tile-title text-large text-primary bg-secondary d-inline-block">${taskObject.title}</div>
+          <div class="tile-subtitle text-small text-gray">${taskObject.description}</div>
+          <div class="tile-subtitle text-tiny text-primary d-inline-block">
+            ${ completed ? 'Completed On:' : '' } ${taskObject.datetime.toLocaleDateString() + ' ' + taskObject.datetime.toLocaleTimeString()}
+          </div>
+        </div>
+        <div class="tile-action">
+          ${!completed ? `<button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-check"></i></button>`:''}
+          <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i class="icon icon-delete"></i></button>
+        </div>
+      </div>
+      <div class="divider"></div>
+    `;
 };

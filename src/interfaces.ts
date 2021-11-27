@@ -4,5 +4,3 @@ export interface Task {
     description: string,
     datetime: Date
 }
-
-// type state = 'completed' | 'pending'; First Change the file name

@@ -64,7 +64,7 @@ export const getLiTaskTemplate = (taskObject: Task, completed:boolean ) : string
         </div>
         <div class="tile-action">
           ${!completed ? `<button id="${taskObject.id}" class="btn btn-link btn-action btn-lg done"><i id="${taskObject.id}" class="icon icon-check"></i></button>`:''}
-          <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg"><i id="${taskObject.id}" class="icon icon-delete"></i></button>
+          <button id="${taskObject.id}" class="btn btn-link btn-action btn-lg ${completed ? 'cdelete' : 'delete'}"><i id="${taskObject.id}" class="icon icon-delete"></i></button>
         </div>
       </div>
       <div class="divider"></div>

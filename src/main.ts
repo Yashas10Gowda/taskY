@@ -3,57 +3,70 @@ import { panelTemplate, modalTemplate, getLiTaskTemplate } from './templates';
 import { Task } from './interfaces';
 
 
-let pendingTasks:Task[] = [
-    {
-        id:1,
-        title:'Hello',
-        description: 'YG',
-        datetime: new Date()
-    }
-];
-let completedTasks:Task[] = [
-    {
-        id:1,
-        title:'World',
-        description: 'YG',
-        datetime: new Date()
-    }
-];
+let pendingTasks: Task[] = [];
+let completedTasks: Task[] = [];
 
-const addListeners = (completed: boolean):void => {
-    const doneButtons = document.querySelectorAll('.done')! as NodeList;
-    doneButtons.forEach(doneButton => {
-        doneButton.addEventListener('click',(event)=>{
-            const buttonId = Number((event.target as HTMLButtonElement).id);
-            const clickedPendingTask = pendingTasks.find(task => task.id === buttonId) as Task;
-            completedTasks.push(clickedPendingTask);
-            pendingTasks = pendingTasks.filter(task => task.id !== buttonId);
-            renderTasks(false);
+const addListeners = (completed: boolean): void => {
+
+    if (!completed) {
+
+        const doneButtons = document.querySelectorAll('.done')! as NodeList;
+        const deleteButtons = document.querySelectorAll('.delete')! as NodeList;
+
+        doneButtons.forEach(doneButton => {
+            doneButton.addEventListener('click', (event) => {
+                const buttonId = Number((event.target as HTMLButtonElement).id);
+                const clickedPendingTask = pendingTasks.find(task => task.id === buttonId) as Task;
+                clickedPendingTask.datetime = new Date();
+                completedTasks.push(clickedPendingTask);
+                pendingTasks = pendingTasks.filter(task => task.id !== buttonId);
+                renderTasks(false);
+            })
         })
-    })
+
+        deleteButtons.forEach(deleteButton => {
+            deleteButton.addEventListener('click', (event) => {
+                const buttonId = Number((event.target as HTMLButtonElement).id);
+                pendingTasks = pendingTasks.filter(task => task.id !== buttonId);
+                renderTasks(false);
+            })
+        })
+    }
+    else {
+        const deleteButtons = document.querySelectorAll('.cdelete')! as NodeList;
+
+        deleteButtons.forEach(deleteButton => {
+            deleteButton.addEventListener('click', (event) => {
+                const buttonId = Number((event.target as HTMLButtonElement).id);
+                completedTasks = completedTasks.filter(task => task.id !== buttonId);
+                renderTasks(true);
+            })
+        })
+    }
+
 }
 
-const renderTasks = (completed:boolean):void => {
+const renderTasks = (completed: boolean): void => {
     const taskOl = document.getElementById('tasks')! as HTMLDivElement;
     taskOl.innerHTML = '';
     const tasks = completed ? completedTasks : pendingTasks;
 
     if (tasks.length == 0)
         taskOl.innerHTML = '<div class="tile-subtitle text-center text-gray"><br>No tasks yet!</div>';
-    else{
+    else {
         tasks.forEach((task) => {
             taskOl.innerHTML += getLiTaskTemplate({
-                id:task.id,
+                id: task.id,
                 title: task.title,
                 description: task.description,
                 datetime: task.datetime
             }, completed);
-        }); 
+        });
         addListeners(completed);
     }
 }
 
-const handleModal = ():void => {
+const handleModal = (): void => {
     const modal = document.getElementById('modal')! as HTMLDivElement;
     const modalClose = document.getElementById('modal-close')! as HTMLAnchorElement;
     const form = document.getElementById('form')! as HTMLFormElement
@@ -62,7 +75,7 @@ const handleModal = ():void => {
     const datetime = document.getElementById('datetime')! as HTMLInputElement;
 
     modal.classList.add('active');
-    form.addEventListener('submit',(event:Event)=>{
+    form.addEventListener('submit', (event: Event) => {
         event.preventDefault();
         pendingTasks.push({
             id: Date.now() + Math.random(),
@@ -77,7 +90,7 @@ const handleModal = ():void => {
         modalClose.outerHTML = modalClose.outerHTML;
     })
 
-    modalClose.addEventListener('click', ()=>{
+    modalClose.addEventListener('click', () => {
         modal.classList.remove('active');
         // The following lines remove all eventListeners
         form.outerHTML = form.outerHTML;
@@ -85,20 +98,20 @@ const handleModal = ():void => {
     })
 }
 
-const handleTab = (event:Event):void => {
+const handleTab = (event: Event): void => {
     const pTabItem = document.getElementById('ptabitem')! as HTMLLIElement;
     const cTabItem = document.getElementById('ctabitem')! as HTMLLIElement;
 
-    if (event.target instanceof Element) { 
-        if(event.target.id == 'pending'){
+    if (event.target instanceof Element) {
+        if (event.target.id == 'pending') {
             pTabItem.classList.add('active');
             cTabItem.classList.remove('active');
             renderTasks(false);
         }
-        else{
+        else {
             pTabItem.classList.remove('active');
             cTabItem.classList.add('active');
-            renderTasks(true);  
+            renderTasks(true);
         }
     }
 }
@@ -111,12 +124,12 @@ const start = () => {
     renderTasks(false);
 }
 
-const isTemplateAdded = new Promise((resolve,_)=>{
+const isTemplateAdded = new Promise((resolve, _) => {
     const app = document.querySelector('#app')! as HTMLDivElement;
     app.innerHTML = panelTemplate + modalTemplate;
     resolve('yes');
 })
 
-isTemplateAdded.then((value)=>{
+isTemplateAdded.then((value) => {
     value == 'yes' ? start() : alert('There was an error');
 })

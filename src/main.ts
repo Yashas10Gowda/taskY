@@ -141,9 +141,9 @@ const isTemplateAddedAndGotLocalForage = new Promise((resolve, _) => {
     app.innerHTML = panelTemplate + modalTemplate;
 
     localforage.getItem('pendingTasks').then(valuep => {
-        pendingTasks = JSON.parse(valuep as string);
+        pendingTasks = valuep ? JSON.parse(valuep as string): [];
         localforage.getItem('completedTasks').then(valuec => {
-            completedTasks = JSON.parse(valuec as string);
+            completedTasks = valuec ? JSON.parse(valuec as string) : [];
             resolve('yes');
         });
     });

@@ -1,6 +1,11 @@
 {
   "name": "tasky",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "taskY! Your todo list made simple.",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/Yashas10Gowda/taskY.git"
+  },
   "scripts": {
     "dev": "vite --open",
     "build": "tsc && vite build",

@@ -1,3 +1,7 @@
+# taskY! Your todo list made simple.
+
+Tech-Stack : Typescript, Vite.js, Spectre.css
+
 ## Quickstart
 
 To get started:

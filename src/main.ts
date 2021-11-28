@@ -20,15 +20,27 @@ let completedTasks:Task[] = [
     }
 ];
 
-const renderTasks = (tasks:Task[], completed:boolean):void => {
+const addListeners = (completed: boolean):void => {
+    const doneButtons = document.querySelectorAll('.done')! as NodeList;
+    doneButtons.forEach(doneButton => {
+        doneButton.addEventListener('click',(event)=>{
+            const buttonId = Number((event.target as HTMLButtonElement).id);
+            const clickedPendingTask = pendingTasks.find(task => task.id === buttonId) as Task;
+            completedTasks.push(clickedPendingTask);
+            pendingTasks = pendingTasks.filter(task => task.id !== buttonId);
+            renderTasks(false);
+        })
+    })
+}
 
+const renderTasks = (completed:boolean):void => {
     const taskOl = document.getElementById('tasks')! as HTMLDivElement;
-
     taskOl.innerHTML = '';
+    const tasks = completed ? completedTasks : pendingTasks;
 
     if (tasks.length == 0)
         taskOl.innerHTML = '<div class="tile-subtitle text-center text-gray"><br>No tasks yet!</div>';
-    else
+    else{
         tasks.forEach((task) => {
             taskOl.innerHTML += getLiTaskTemplate({
                 id:task.id,
@@ -36,7 +48,9 @@ const renderTasks = (tasks:Task[], completed:boolean):void => {
                 description: task.description,
                 datetime: task.datetime
             }, completed);
-        });    
+        }); 
+        addListeners(completed);
+    }
 }
 
 const handleModal = ():void => {
@@ -56,7 +70,7 @@ const handleModal = ():void => {
             description: description.value,
             datetime: new Date(datetime.value)
         })
-        renderTasks(pendingTasks, false);
+        renderTasks(false);
         modal.classList.remove('active');
         // The following lines remove all eventListeners
         form.outerHTML = form.outerHTML;
@@ -79,22 +93,22 @@ const handleTab = (event:Event):void => {
         if(event.target.id == 'pending'){
             pTabItem.classList.add('active');
             cTabItem.classList.remove('active');
-            renderTasks(pendingTasks,false);
+            renderTasks(false);
         }
         else{
             pTabItem.classList.remove('active');
             cTabItem.classList.add('active');
-            renderTasks(completedTasks,true);  
+            renderTasks(true);  
         }
     }
 }
 
 const start = () => {
     const modalTrigger = document.getElementById('modal-trigger')! as HTMLButtonElement;
-    modalTrigger.addEventListener('click', handleModal);
     const tab = document.getElementById('tab')! as HTMLUListElement;
+    modalTrigger.addEventListener('click', handleModal);
     tab.addEventListener('click', handleTab)
-    renderTasks(pendingTasks, false);
+    renderTasks(false);
 }
 
 const isTemplateAdded = new Promise((resolve,_)=>{

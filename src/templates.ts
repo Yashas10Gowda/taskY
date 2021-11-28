@@ -59,7 +59,7 @@ export const getLiTaskTemplate = (taskObject: Task, completed:boolean ) : string
           <div ${ completed ? 'style="text-decoration: line-through;"' : '' } class="tile-title text-large text-primary bg-secondary d-inline-block">${taskObject.title}</div>
           <div class="tile-subtitle text-small text-gray">${taskObject.description}</div>
           <div class="tile-subtitle text-tiny text-primary d-inline-block">
-            ${ completed ? 'Completed On:' : '' } ${taskObject.datetime.toLocaleDateString() + ' ' + taskObject.datetime.toLocaleTimeString()}
+            ${ completed ? 'Completed On:' : '' } ${taskObject.datetime}
           </div>
         </div>
         <div class="tile-action">

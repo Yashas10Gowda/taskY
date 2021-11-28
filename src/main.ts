@@ -1,10 +1,15 @@
 import './style.css'
 import { panelTemplate, modalTemplate, getLiTaskTemplate } from './templates';
 import { Task } from './interfaces';
-
+import localforage from 'localforage'
 
 let pendingTasks: Task[] = [];
 let completedTasks: Task[] = [];
+
+const updateLocalForage = (): void => {
+    localforage.setItem('pendingTasks', JSON.stringify(pendingTasks));
+    localforage.setItem('completedTasks', JSON.stringify(completedTasks));
+}
 
 const addListeners = (completed: boolean): void => {
 
@@ -17,7 +22,8 @@ const addListeners = (completed: boolean): void => {
             doneButton.addEventListener('click', (event) => {
                 const buttonId = Number((event.target as HTMLButtonElement).id);
                 const clickedPendingTask = pendingTasks.find(task => task.id === buttonId) as Task;
-                clickedPendingTask.datetime = new Date();
+                const dt = new Date()
+                clickedPendingTask.datetime = (dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString());
                 completedTasks.push(clickedPendingTask);
                 pendingTasks = pendingTasks.filter(task => task.id !== buttonId);
                 renderTasks(false);
@@ -50,6 +56,7 @@ const renderTasks = (completed: boolean): void => {
     const taskOl = document.getElementById('tasks')! as HTMLDivElement;
     taskOl.innerHTML = '';
     const tasks = completed ? completedTasks : pendingTasks;
+    updateLocalForage();
 
     if (tasks.length == 0)
         taskOl.innerHTML = '<div class="tile-subtitle text-center text-gray"><br>No tasks yet!</div>';
@@ -77,11 +84,12 @@ const handleModal = (): void => {
     modal.classList.add('active');
     form.addEventListener('submit', (event: Event) => {
         event.preventDefault();
+        const dt = new Date(datetime.value);
         pendingTasks.push({
             id: Date.now() + Math.random(),
             title: title.value,
             description: description.value,
-            datetime: new Date(datetime.value)
+            datetime: (dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString())
         })
         renderTasks(false);
         modal.classList.remove('active');
@@ -96,6 +104,10 @@ const handleModal = (): void => {
         form.outerHTML = form.outerHTML;
         modalClose.outerHTML = modalClose.outerHTML;
     })
+
+    // This is to update the tab if the user adds a task when completed(tab-item) is active
+    const tab = document.getElementById('pending')! as HTMLAnchorElement;
+    tab.click();
 }
 
 const handleTab = (event: Event): void => {
@@ -124,12 +136,19 @@ const start = () => {
     renderTasks(false);
 }
 
-const isTemplateAdded = new Promise((resolve, _) => {
+const isTemplateAddedAndGotLocalForage = new Promise((resolve, _) => {
     const app = document.querySelector('#app')! as HTMLDivElement;
     app.innerHTML = panelTemplate + modalTemplate;
-    resolve('yes');
+
+    localforage.getItem('pendingTasks').then(valuep => {
+        pendingTasks = JSON.parse(valuep as string);
+        localforage.getItem('completedTasks').then(valuec => {
+            completedTasks = JSON.parse(valuec as string);
+            resolve('yes');
+        });
+    });
 })
 
-isTemplateAdded.then((value) => {
+isTemplateAddedAndGotLocalForage.then((value) => {
     value == 'yes' ? start() : alert('There was an error');
 })

@@ -11,6 +11,6 @@
     "vite": "^2.6.4"
   },
   "dependencies": {
-    "push.js": "^1.0.12"
+    "localforage": "^1.10.0"
   }
 }
